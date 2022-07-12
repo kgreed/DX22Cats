@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DX22Cats.Module", "DX22Cats.Module\DX22Cats.Module.csproj", "{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DX22Cats.Win", "DX22Cats.Win\DX22Cats.Win.csproj", "{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		EasyTest|Any CPU = EasyTest|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB0DC8D-DCBB-455B-9A22-2472BCC01C82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.EasyTest|Any CPU.ActiveCfg = EasyTest|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.EasyTest|Any CPU.Build.0 = EasyTest|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F94F35B-4590-4BDE-905B-2C8FD52B5C98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AC52E47-049D-4717-BBE3-67B87F621104}
+	EndGlobalSection
+EndGlobal

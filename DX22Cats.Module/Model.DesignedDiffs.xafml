@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application Title="DX22Cats">
+  <SchemaModules>
+    <SchemaModule Name="SystemModule" Version="22.1.3.0" IsNewNode="True" />
+  </SchemaModules>
+  <Views>
+    <ListView Id="Cat_ListView" MasterDetailMode="ListViewAndDetailView" />
+  </Views>
+</Application>
