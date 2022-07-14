@@ -1,6 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application Logo="ExpressAppLogo">
-  <NavigationItems NavigationStyle="Accordion" ShowImages="False" DefaultChildItemsDisplayStyle="List" />
+  <NavigationItems NavigationStyle="Accordion" ShowImages="False" DefaultChildItemsDisplayStyle="List">
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="Cat_ListView" Visible="False" />
+          <Item Id="Food_ListView" Visible="False" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
   <Options UIType="TabbedMDI" FormStyle="Ribbon" ShowTabImage="False">
     <LayoutManagerOptions EnableLayoutGroupImages="False" />
   </Options>
@@ -9,6 +18,13 @@
     <SchemaModule Name="SystemWindowsFormsModule" Version="22.1.3.0" IsNewNode="True" />
   </SchemaModules>
   <Views>
+    <ListView Id="CatFilterHolder_Cats_ListView">
+      <Columns>
+        <ColumnInfo Id="Color" Width="138" Index="0" />
+        <ColumnInfo Id="Name" Width="160" Index="1" />
+        <ColumnInfo Id="Verified" Width="83" />
+      </Columns>
+    </ListView>
     <DetailView Id="CatFilterHolder_DetailView">
       <Layout>
         <LayoutGroup Id="Main">

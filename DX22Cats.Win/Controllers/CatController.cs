@@ -15,6 +15,7 @@ using DX22Cats.Module.Functions;
 using DX22Cats.Win.Editors;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -61,6 +62,9 @@ namespace DX22Cats.Module.Controllers
         }
         private void actSetColor_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
+           // View.ObjectSpace.CommitChanges();  // as a precaution
+
+
             var cat = View.CurrentObject as Cat;
             var db = Helpers.MakeDbContext();
             var dCat= db.Cats.SingleOrDefault(x => x.ID == cat.ID);
@@ -75,14 +79,18 @@ namespace DX22Cats.Module.Controllers
 
 
             db.Entry(dCat).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            db.SaveChanges();
-            MessageBox.Show($"Set {cat.Name} colour = {cat.Color}");
-
+            db.SaveChanges(); // seems to refresh listview immediately
+                              //  MessageBox.Show($"Set {cat.Name} colour = {cat.Color}");
+           // Frame.View.Refresh();
+            //var editView = ((ListView)Frame.View).EditView;
+            //editView.Refresh();
+            
+           // View.ObjectSpace.CommitChanges();
             // at this point the field is updated in the list but not in the RHS
 
             //View.CurrentObject = cat;
             //cat.ObjectSpace.Refresh(); // no good detailview responsive but not listview
-            //View.ObjectSpace.Refresh(); // causes problem
+           //  View.ObjectSpace.Refresh(); // causes problem
             // View.Refresh(); 
 
             //if (View is not ListView lv) return;

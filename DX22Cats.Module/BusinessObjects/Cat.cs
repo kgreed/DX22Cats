@@ -43,7 +43,7 @@ namespace DX22Cats.Module.BusinessObjects
         //[XafDisplayName("My display name"), ToolTip("My hint message")]
         //[ModelDefault("EditMask", "(000)-00"), VisibleInListView(false)]
         //[RuleRequiredField(DefaultContexts.Save)]
-
+        [ImmediatePostData]
         public string Color
         {
             get { return _Color; }
@@ -52,7 +52,7 @@ namespace DX22Cats.Module.BusinessObjects
                 if (_Color != value)
                 {
                     _Color = value;
-                   // OnPropertyChanged();
+                   OnPropertyChanged();
                 }
             }
         }
