@@ -7,10 +7,12 @@ using DevExpress.ExpressApp.Model.NodeGenerators;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Templates;
 using DevExpress.ExpressApp.Utils;
+using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using DX22Cats.Module.BusinessObjects;
 using DX22Cats.Module.Functions;
+using DX22Cats.Win.Editors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,22 +64,54 @@ namespace DX22Cats.Module.Controllers
             var cat = View.CurrentObject as Cat;
             var db = Helpers.MakeDbContext();
             var dCat= db.Cats.SingleOrDefault(x => x.ID == cat.ID);
+            var colourList = new string[] { "Tabby","Spotty","White","Ginger","Grey"};
 
-            var s = cat.Color ?? "";
-            switch (s)
-            {
-                case "": s = "tabby"; break;
-                case "tabby": s = "spotty"; break;
-                case "spotty": s = "grey"; break;
-                default: s = "black"; break;
+            var colorId = Array.IndexOf(colourList, cat.Color);
+            if (colorId == 0) { cat.Color = colourList[0]; }
+            colorId++;
+            if (colorId >= colourList.Length) { cat.Color = colourList[0]; } else { cat.Color = colourList[colorId]; }
 
-            }
-            dCat.Color = s;
+           
+
+
             db.Entry(dCat).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             db.SaveChanges();
+            MessageBox.Show($"Set {cat.Name} colour = {cat.Color}");
 
-            View.ObjectSpace.Refresh();
-          //  View.Refresh();
+            // at this point the field is updated in the list but not in the RHS
+
+            //View.CurrentObject = cat;
+            //cat.ObjectSpace.Refresh(); // no good detailview responsive but not listview
+            //View.ObjectSpace.Refresh(); // causes problem
+            // View.Refresh(); 
+
+            //if (View is not ListView lv) return;
+            //var savedView = (ListView)Frame.View;
+            /////var caption = savedView.Caption;
+            //var tr = lv.CurrentObject as IToggleRHS;
+            //var ed = savedView.Editor as GridListEditor;
+            //var gv = ed.GridView;
+            //var rowHandle = HandyXAFWinFunctions.FindRowHandleByRowObject(gv, tr);
+            //if (!Frame.SetView(null, true, null, false)) return;
+           
+
+            ////savedView.Model.MasterDetailMode = savedView.Model.MasterDetailMode == MasterDetailMode.ListViewOnly
+            ////    ? MasterDetailMode.ListViewAndDetailView
+            ////    : MasterDetailMode.ListViewOnly;
+
+
+            //// Update the saved View according to the latest model changes and assign it back to the current Frame.
+            ////savedView.LoadModel(false);
+            ////savedView.Caption = caption;
+            ////Frame.SetView(savedView);
+            //var ed2 = savedView.Editor as GridListEditor;
+            ////////HandyXAFWinFunctions.SelectRowInListView();
+            //var gv2 = ed2.GridView;
+            //gv2.FocusedRowHandle = rowHandle;
+            //gv2.ClearSelection();
+            //gv2.SelectRow(rowHandle);
+
+
         }
         protected override void OnActivated()
         {
