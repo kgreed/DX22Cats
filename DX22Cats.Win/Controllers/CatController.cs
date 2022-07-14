@@ -62,35 +62,39 @@ namespace DX22Cats.Module.Controllers
         }
         private void actSetColor_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
-           // View.ObjectSpace.CommitChanges();  // as a precaution
+            View.ObjectSpace.CommitChanges();  // start with save objects
 
-
+            // works if colour property has INotifyPropertyChanges
             var cat = View.CurrentObject as Cat;
-            var db = Helpers.MakeDbContext();
-            var dCat= db.Cats.SingleOrDefault(x => x.ID == cat.ID);
-            var colourList = new string[] { "Tabby","Spotty","White","Ginger","Grey"};
-
+            var colourList = new string[] { "Tabby", "Spotty", "White", "Ginger", "Grey" };
             var colorId = Array.IndexOf(colourList, cat.Color);
-            if (colorId == 0) { cat.Color = colourList[0]; }
+            
             colorId++;
-            if (colorId >= colourList.Length) { cat.Color = colourList[0]; } else { cat.Color = colourList[colorId]; }
+           // if (colorId >= colourList.Length) { cat.Color = colourList[0]; } else { cat.Color = colourList[colorId]; }
 
-           
 
+
+
+            var db = Helpers.MakeDbContext();
+            var dCat = db.Cats.SingleOrDefault(x => x.ID == cat.ID);
+            if (colorId >= colourList.Length) { dCat.Color = colourList[0]; } else { dCat.Color = colourList[colorId]; }
 
             db.Entry(dCat).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             db.SaveChanges(); // seems to refresh listview immediately
-                              //  MessageBox.Show($"Set {cat.Name} colour = {cat.Color}");
-           // Frame.View.Refresh();
+             MessageBox.Show($"Set {dCat.Name} colour = {dCat.Color}");
+           // View.CurrentObject = dCat;  Will cause a 1021 error
+
+
+            // Frame.View.Refresh();
             //var editView = ((ListView)Frame.View).EditView;
             //editView.Refresh();
-            
-           // View.ObjectSpace.CommitChanges();
+
+            // View.ObjectSpace.CommitChanges();
             // at this point the field is updated in the list but not in the RHS
 
             //View.CurrentObject = cat;
             //cat.ObjectSpace.Refresh(); // no good detailview responsive but not listview
-           //  View.ObjectSpace.Refresh(); // causes problem
+            //  View.ObjectSpace.Refresh(); // causes problem
             // View.Refresh(); 
 
             //if (View is not ListView lv) return;
@@ -101,7 +105,7 @@ namespace DX22Cats.Module.Controllers
             //var gv = ed.GridView;
             //var rowHandle = HandyXAFWinFunctions.FindRowHandleByRowObject(gv, tr);
             //if (!Frame.SetView(null, true, null, false)) return;
-           
+
 
             ////savedView.Model.MasterDetailMode = savedView.Model.MasterDetailMode == MasterDetailMode.ListViewOnly
             ////    ? MasterDetailMode.ListViewAndDetailView
