@@ -1,27 +1,15 @@
-﻿using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Layout;
-using DevExpress.ExpressApp.Model.NodeGenerators;
-using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Templates;
-using DevExpress.ExpressApp.Utils;
 using DevExpress.ExpressApp.Win.Editors;
-using DevExpress.Persistent.Base;
-using DevExpress.Persistent.Validation;
 using DX22Cats.Module.BusinessObjects;
 using DX22Cats.Module.Functions;
 using DX22Cats.Win.Editors;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace DX22Cats.Module.Controllers
 {
- 
+
 
     // For more typical usage scenarios, be sure to check out https://documentation.devexpress.com/eXpressAppFramework/clsDevExpressExpressAppViewControllertopic.aspx.
     public partial class CatController : ViewController
@@ -32,12 +20,13 @@ namespace DX22Cats.Module.Controllers
         // https://docs.devexpress.com/CodeRushForRoslyn/403133/
         public CatController()
         {
-            actAddCats = new SimpleAction(this, "AddCats", "View") { TargetObjectType = typeof(Cat) };
+            actAddCats = new SimpleAction(this, "AddCats", "View") { };
             actAddCats.Execute += actAddCats_Execute;
-            
-            actSetColor = new SimpleAction(this, "SetColor", "View") { TargetObjectType = typeof(Cat)};
-            actSetColor.Execute += actSetColor_Execute;
 
+            actSetColor = new SimpleAction(this, "SetColor", "View") { };
+            actSetColor.Execute += actSetColor_Execute;
+            TargetObjectType = typeof(Cat);
+            TargetViewType = ViewType.ListView;
             InitializeComponent();
             // Target required Views (via the TargetXXX properties) and create their Actions.
         }
@@ -66,11 +55,11 @@ namespace DX22Cats.Module.Controllers
 
             // works if colour property has INotifyPropertyChanges
             var cat = View.CurrentObject as Cat;
-            var colourList = new string[] { "Tabby", "Spotty", "White", "Ginger", "Grey" ,"Perrywinkle","Blue"};
+            var colourList = new string[] { "Tabby", "Spotty", "White", "Ginger", "Grey", "Perrywinkle", "Blue" };
             var colorId = Array.IndexOf(colourList, cat.Color);
-            
+
             colorId++;
-           // if (colorId >= colourList.Length) { cat.Color = colourList[0]; } else { cat.Color = colourList[colorId]; }
+            // if (colorId >= colourList.Length) { cat.Color = colourList[0]; } else { cat.Color = colourList[colorId]; }
 
 
 
@@ -80,50 +69,37 @@ namespace DX22Cats.Module.Controllers
             if (colorId >= colourList.Length) { dCat.Color = colourList[0]; } else { dCat.Color = colourList[colorId]; }
 
             db.Entry(dCat).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            db.SaveChanges(); // seems to refresh listview immediately
-             MessageBox.Show($"Set {dCat.Name} colour = {dCat.Color}");
-           // View.CurrentObject = dCat;  Will cause a 1021 error
+            db.SaveChanges();  
+            var lv = ((ListView)View);
+            lv.CollectionSource.ResetCollection(true);
+            lv.RefreshDataSource();
+            lv.EditView.RefreshDataSource();
+            lv.EditView.Refresh();
+            cat = View.CurrentObject as Cat;
+             
+            MessageBox.Show($"Set {dCat.Name} new colour = {dCat.Color}  , old cat ={cat.Color}");
+
+            
+
+        }
 
 
-            // Frame.View.Refresh();
-            //var editView = ((ListView)Frame.View).EditView;
-            //editView.Refresh();
-
-            // View.ObjectSpace.CommitChanges();
-            // at this point the field is updated in the list but not in the RHS
-
-            //View.CurrentObject = cat;
-            //cat.ObjectSpace.Refresh(); // no good detailview responsive but not listview
-            //  View.ObjectSpace.Refresh(); // causes problem
-            // View.Refresh(); 
-
-            //if (View is not ListView lv) return;
-            //var savedView = (ListView)Frame.View;
-            /////var caption = savedView.Caption;
-            //var tr = lv.CurrentObject as IToggleRHS;
-            //var ed = savedView.Editor as GridListEditor;
-            //var gv = ed.GridView;
-            //var rowHandle = HandyXAFWinFunctions.FindRowHandleByRowObject(gv, tr);
-            //if (!Frame.SetView(null, true, null, false)) return;
+        private void View_CurrentObjectChanged(object sender, EventArgs e)
+        {
+            var h = View.CurrentObject as Cat;
+            if (h == null)
+                return;
 
 
-            ////savedView.Model.MasterDetailMode = savedView.Model.MasterDetailMode == MasterDetailMode.ListViewOnly
-            ////    ? MasterDetailMode.ListViewAndDetailView
-            ////    : MasterDetailMode.ListViewOnly;
+            var lv = View as ListView;
+            var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
+            dv.RefreshDataSource();
+            dv.Refresh();
+            if (dv == null)
+                return;
 
-
-            //// Update the saved View according to the latest model changes and assign it back to the current Frame.
-            ////savedView.LoadModel(false);
-            ////savedView.Caption = caption;
-            ////Frame.SetView(savedView);
-            //var ed2 = savedView.Editor as GridListEditor;
-            ////////HandyXAFWinFunctions.SelectRowInListView();
-            //var gv2 = ed2.GridView;
-            //gv2.FocusedRowHandle = rowHandle;
-            //gv2.ClearSelection();
-            //gv2.SelectRow(rowHandle);
-
-
+            var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
+            viewItem.Refresh();
         }
         protected override void OnActivated()
         {
@@ -132,11 +108,13 @@ namespace DX22Cats.Module.Controllers
         }
         protected override void OnViewControlsCreated()
         {
+            View.CurrentObjectChanged += View_CurrentObjectChanged;
             base.OnViewControlsCreated();
             // Access and customize the target View control.
         }
         protected override void OnDeactivated()
         {
+            View.CurrentObjectChanged -= View_CurrentObjectChanged;
             // Unsubscribe from previously subscribed events and release other references and resources.
             base.OnDeactivated();
         }

@@ -13,28 +13,40 @@ namespace DX22Cats.Win.Editors
         internal static void RefreshAndWarnMismatchIfNeeded(CatFilterHolder holder, CompositeView view)
         {
             var recordCount = holder.ApplyFilter();
-
+           // holder.Cats.Clear();
+            //return;
 
             HandyXAFFunctions.WarnRecordsCountIfNeeded(recordCount);
 
             GridView gv = null;
             var detailView = view as DetailView;
+            detailView.CurrentObject = holder;
+
             int lvCount = 0;
             ListView lv;
             var counter = 0;
             foreach (ListPropertyEditor lpe in detailView.GetItems<ListPropertyEditor>())
             {
                 counter++;
-                lv = lpe.ListView;
                 
-               
+                lpe.RefreshDataSource();
+
+
+                lv = lpe.ListView;
+
+
+                var isSameOS1 = lv.EditView.IsSameObjectSpace(lv);
                 lv.CollectionSource.ResetCollection(true);  // brings in data
-               
+
                 lv.RefreshDataSource();
+                
                 lv.EditView.RefreshDataSource();
                 lv.EditView.Refresh();
+                var isSameOS2 = lv.EditView.IsSameObjectSpace(lv);
                 var gridEditor = lv.Editor as GridListEditor;
                 gv = gridEditor.GridView;
+                
+                gv.RefreshData();
                 lvCount = gv.RowCount;
             }
 

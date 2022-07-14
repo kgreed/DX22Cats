@@ -46,7 +46,7 @@ namespace DX22Cats.Module.BusinessObjects
             var line = 10;
             try
             {
-                Cats = new List<Cat>();
+              
                 if (ObjectSpace == null) return 0;
                 ObjectSpace = Application.CreateObjectSpace(typeof(Cat));  // any valid type would have done
                  
@@ -58,7 +58,7 @@ namespace DX22Cats.Module.BusinessObjects
                 var db = Helpers.MakeDbContext();
 
                 var results = db.Cats.FromSqlRaw(sql).ToList();
-
+                Cats = new List<Cat>();
                 foreach (Cat r in results)
                 {
                     r.ObjectSpace = ObjectSpace;

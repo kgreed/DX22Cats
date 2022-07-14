@@ -52,6 +52,9 @@ namespace DX22Cats.Win.Editors
             var holder = View.CurrentObject as CatFilterHolder;
 
             HandyXAFWinFunctions.RefreshAndWarnMismatchIfNeeded(holder, View);
+            View.CurrentObject = holder;
+            View.Refresh();
+           
 
         }
     }
