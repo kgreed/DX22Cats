@@ -20,7 +20,7 @@ namespace DX22Cats.Module.BusinessObjects
     //[DefaultListViewOptions(MasterDetailMode.ListViewOnly, false, NewItemRowPosition.None)]
     // Specify more UI options using a declarative approach (https://documentation.devexpress.com/#eXpressAppFramework/CustomDocument112701).
     [Appearance("StatusVerified", FontColor = "#009A00", TargetItems = "*", Criteria = "Verified" )] // green 
-    public class Cat : MyBaseObject
+    public class Cat : MyBaseObject, IToggleRHS
     {
         public Cat()
         {
@@ -63,6 +63,8 @@ namespace DX22Cats.Module.BusinessObjects
         [ToolTip("Indicates the cat has been verified")]
         [ImmediatePostData]
         public bool Verified{ get => _verified; set { _verified = value; OnPropertyChanged(); } }
+
+        public int Key => ID;
         // Collection property:
         //public virtual IList<AssociatedEntityObject> AssociatedEntities { get; set; }
 
@@ -72,6 +74,6 @@ namespace DX22Cats.Module.BusinessObjects
         //    this.PersistentProperty = "Paid";
         //}
 
- 
+
     }
 }

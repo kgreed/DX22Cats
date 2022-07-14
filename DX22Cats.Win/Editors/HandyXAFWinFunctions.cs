@@ -4,6 +4,7 @@ using DX22Cats.Module.BusinessObjects;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Win.Editors;
 using DevExpress.ExpressApp.Win;
+using DevExpress.XtraGrid;
 
 namespace DX22Cats.Win.Editors
 {
@@ -59,6 +60,24 @@ namespace DX22Cats.Win.Editors
 
             }
             return null;
+        }
+
+        public static int FindRowHandleByRowObject(GridView view, IToggleRHS row)
+        {
+            if (row == null) return GridControl.InvalidRowHandle;
+            for (var i = 0; i < view.DataRowCount; i++)
+                if (row.Equals(view.GetRow(i)))
+                    return i;
+            if (row is not IToggleRHS ext) throw new Exception("Cant find row ");
+            {
+                for (var i = 0; i < view.DataRowCount; i++)
+                {
+                    var rowJ = view.GetRow(i) as IToggleRHS;
+                    if (ext.Key == rowJ.Key)
+                        return i;
+                }
+            }
+            throw new Exception("Cant find row ");
         }
     }
 }

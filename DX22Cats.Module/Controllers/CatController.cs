@@ -29,10 +29,10 @@ namespace DX22Cats.Module.Controllers
         // https://docs.devexpress.com/CodeRushForRoslyn/403133/
         public CatController()
         {
-            actAddCats = new SimpleAction(this, "AddCats", "View");
+            actAddCats = new SimpleAction(this, "AddCats", "View") { TargetObjectType = typeof(Cat) };
             actAddCats.Execute += actAddCats_Execute;
             
-            actSetColor = new SimpleAction(this, "SetColor", "View");
+            actSetColor = new SimpleAction(this, "SetColor", "View") { TargetObjectType = typeof(Cat)};
             actSetColor.Execute += actSetColor_Execute;
 
             InitializeComponent();
