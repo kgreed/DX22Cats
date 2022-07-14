@@ -18,19 +18,44 @@ using System.Text;
 
 namespace DX22Cats.Module.Controllers
 {
+ 
+
     // For more typical usage scenarios, be sure to check out https://documentation.devexpress.com/eXpressAppFramework/clsDevExpressExpressAppViewControllertopic.aspx.
     public partial class CatController : ViewController
     {
+        SimpleAction actAddCats;
         SimpleAction actSetColor;
         // Use CodeRush to create Controllers and Actions with a few keystrokes.
         // https://docs.devexpress.com/CodeRushForRoslyn/403133/
         public CatController()
         {
+            actAddCats = new SimpleAction(this, "AddCats", "View");
+            actAddCats.Execute += actAddCats_Execute;
+            
             actSetColor = new SimpleAction(this, "SetColor", "View");
             actSetColor.Execute += actSetColor_Execute;
-            
+
             InitializeComponent();
             // Target required Views (via the TargetXXX properties) and create their Actions.
+        }
+        private void actAddCats_Execute(object sender, SimpleActionExecuteEventArgs e)
+        {
+            var db = Helpers.MakeDbContext();
+            for (int i = 0; i < 100; i++)
+            {
+                var cat = new Cat
+                {
+                    Name = $"Cat {i}"
+                };
+
+                for (int j = 0; j < 10; j++)
+                {
+                    cat.Foods.Add(new Food { Description = $"Food {j}" });
+                }
+                db.Cats.Add(cat);
+            }
+            db.SaveChanges();
+            View.Refresh();
         }
         private void actSetColor_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
@@ -52,7 +77,7 @@ namespace DX22Cats.Module.Controllers
             db.SaveChanges();
 
             View.ObjectSpace.Refresh();
-            View.Refresh();
+          //  View.Refresh();
         }
         protected override void OnActivated()
         {

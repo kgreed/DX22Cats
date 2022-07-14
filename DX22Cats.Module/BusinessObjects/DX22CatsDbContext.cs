@@ -34,5 +34,6 @@ public class DX22CatsEFCoreDbContext : DbContext {
 	public DX22CatsEFCoreDbContext(DbContextOptions<DX22CatsEFCoreDbContext> options) : base(options) {
 	}
 	public DbSet<ModuleInfo> ModulesInfo { get; set; }
+	public DbSet<Food> Foods { get; set; }
 	public DbSet<Cat> Cats { get; set; }
 }

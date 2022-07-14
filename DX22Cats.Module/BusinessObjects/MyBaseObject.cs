@@ -17,11 +17,11 @@ namespace DX22Cats.Module.BusinessObjects
         public event PropertyChangedEventHandler PropertyChanged;
         
         // Use the Object Space to access other entities from IXafEntityObject methods (see https://documentation.devexpress.com/eXpressAppFramework/CustomDocument113707.aspx).
-        private IObjectSpace objectSpace;
+        public IObjectSpace ObjectSpace;
         IObjectSpace IObjectSpaceLink.ObjectSpace
         {
-            get { return objectSpace; }
-            set { objectSpace = value; }
+            get { return ObjectSpace; }
+            set { ObjectSpace = value; }
         }
        
 
