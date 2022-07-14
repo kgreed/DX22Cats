@@ -26,9 +26,13 @@ namespace DX22Cats.Win.Editors
             {
                 counter++;
                 lv = lpe.ListView;
-                lv.CollectionSource.ResetCollection(true);
+                
+               
+                lv.CollectionSource.ResetCollection(true);  // brings in data
+               
                 lv.RefreshDataSource();
-                lv.Refresh();
+                lv.EditView.RefreshDataSource();
+                lv.EditView.Refresh();
                 var gridEditor = lv.Editor as GridListEditor;
                 gv = gridEditor.GridView;
                 lvCount = gv.RowCount;

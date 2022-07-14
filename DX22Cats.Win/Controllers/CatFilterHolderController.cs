@@ -92,8 +92,8 @@ namespace DX22Cats.Win.Controllers
         {
 
             var filter = new CatFilter();
-            var holder = new CatFilterHolder(filter) { };
-            HolderFunctions.OpenFeature(holder, Application, e);
+            var holder = new CatFilterHolder(filter,Application) { };
+            HolderFunctions.OpenFeature(holder,   e);
         }
     }
 }

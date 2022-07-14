@@ -7,15 +7,15 @@ namespace DX22Cats.Win.Controllers
 {
     internal class HolderFunctions
     {
-        internal static bool OpenFeature(CatFilterHolder holder, XafApplication application, SimpleActionExecuteEventArgs e)
+        internal static bool OpenFeature(CatFilterHolder holder,   SimpleActionExecuteEventArgs e)
         {
             var holderType = holder.GetType();
-            var viewId = application.FindDetailViewId(holderType);
+           
+            var viewId = holder.Application.FindDetailViewId(holderType);
 
 
 
-            var os = application.CreateObjectSpace(typeof(Cat));  // any valid type would have done
-            holder.ObjectSpace = os;
+           
             var recordCount = holder.ApplyFilter();
             var maxCount = 1000;
             if (recordCount == maxCount)
@@ -25,7 +25,7 @@ namespace DX22Cats.Win.Controllers
             }
 
 
-            var win = HandyXAFWinFunctions.GetWinIfOpen(application, viewId);
+            var win = HandyXAFWinFunctions.GetWinIfOpen(holder.Application, viewId);
             if (win != null)
             {
                 win.View.CurrentObject = holder;
@@ -34,7 +34,7 @@ namespace DX22Cats.Win.Controllers
             }
             else
             {
-                var detailView = application.CreateDetailView(os, holder);
+                var detailView = holder.Application.CreateDetailView(holder.ObjectSpace, holder);
                 e.ShowViewParameters.CreatedView = detailView;
             }
 

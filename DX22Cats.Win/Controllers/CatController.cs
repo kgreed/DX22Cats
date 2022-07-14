@@ -66,7 +66,7 @@ namespace DX22Cats.Module.Controllers
 
             // works if colour property has INotifyPropertyChanges
             var cat = View.CurrentObject as Cat;
-            var colourList = new string[] { "Tabby", "Spotty", "White", "Ginger", "Grey" };
+            var colourList = new string[] { "Tabby", "Spotty", "White", "Ginger", "Grey" ,"Perrywinkle","Blue"};
             var colorId = Array.IndexOf(colourList, cat.Color);
             
             colorId++;
