@@ -93,11 +93,12 @@ namespace DX22Cats.Module.Controllers
 
             var lv = View as ListView;
             var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
-            dv.RefreshDataSource();
-            dv.Refresh();
             if (dv == null)
                 return;
 
+            dv.RefreshDataSource();
+            dv.Refresh();
+           
             var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
             viewItem.Refresh();
         }
