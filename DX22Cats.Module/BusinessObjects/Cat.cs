@@ -31,7 +31,7 @@ namespace DX22Cats.Module.BusinessObjects
         {
             //throw new NotImplementedException();
         }
-
+        [Key]
         [Browsable(false)]  // Hide the entity identifier from UI.
         public Int32 ID { get; protected set; }
 
