@@ -80,7 +80,7 @@ namespace DX22Cats.Win.Controllers
         public CatFilterHolderController() : base()
         {
             TargetViewNesting = Nesting.Root;
-            actCatsScreen = new SimpleAction(this, "Cats", "View")  ;
+            actCatsScreen = new SimpleAction(this, "Cats", "Filters")  ;
             actCatsScreen.Execute += actCatsScreen_Execute;
 
 

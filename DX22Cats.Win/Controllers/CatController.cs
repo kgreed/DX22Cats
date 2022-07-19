@@ -86,21 +86,21 @@ namespace DX22Cats.Module.Controllers
 
         private void View_CurrentObjectChanged(object sender, EventArgs e)
         {
-            var h = View.CurrentObject as Cat;
-            if (h == null)
-                return;
+            //var h = View.CurrentObject as Cat;
+            //if (h == null)
+            //    return;
 
 
-            var lv = View as ListView;
-            var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
-            if (dv == null)
-                return;
+            //var lv = View as ListView;
+            //var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
+            //if (dv == null)
+            //    return;
 
-            dv.RefreshDataSource();
-            dv.Refresh();
-           
-            var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
-            viewItem.Refresh();
+            //dv.RefreshDataSource();
+            //dv.Refresh();
+          
+            //var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
+            //viewItem.Refresh();
         }
         protected override void OnActivated()
         {

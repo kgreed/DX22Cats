@@ -7,15 +7,10 @@ namespace DX22Cats.Win.Controllers
 {
     internal class HolderFunctions
     {
-        internal static bool OpenFeature(CatFilterHolder holder,   SimpleActionExecuteEventArgs e)
+        internal static bool OpenFeature(CatFilterHolder holder, SimpleActionExecuteEventArgs e)
         {
             var holderType = holder.GetType();
-           
             var viewId = holder.Application.FindDetailViewId(holderType);
-
-
-
-           
             var recordCount = holder.ApplyFilter();
             var maxCount = 1000;
             if (recordCount == maxCount)
@@ -28,7 +23,7 @@ namespace DX22Cats.Win.Controllers
             var win = HandyXAFWinFunctions.GetWinIfOpen(holder.Application, viewId);
             if (win != null)
             {
-                win.View.CurrentObject = holder;
+
                 win.View.RefreshDataSource();
                 e.ShowViewParameters.CreatedView = win.View;
             }
