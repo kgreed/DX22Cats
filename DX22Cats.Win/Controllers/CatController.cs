@@ -1,9 +1,11 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.Win.Editors;
 using DX22Cats.Module.BusinessObjects;
 using DX22Cats.Module.Functions;
 using DX22Cats.Win.Editors;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -65,19 +67,39 @@ namespace DX22Cats.Module.Controllers
 
 
             var db = Helpers.MakeDbContext();
-            var dCat = db.Cats.SingleOrDefault(x => x.ID == cat.ID);
+            var dCat = db.Cats.Include(x=>x.Foods).SingleOrDefault(x => x.ID == cat.ID);
             if (colorId >= colourList.Length) { dCat.Color = colourList[0]; } else { dCat.Color = colourList[colorId]; }
 
-            db.Entry(dCat).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            db.SaveChanges();  
+            db.Entry(dCat).State =  EntityState.Modified;
+            db.SaveChanges();
+
+            //var changes = db.ChangeTracker.HasChanges() ? "Changes" : "None";
+           // MessageBox.Show(changes);
             var lv = ((ListView)View);
             lv.CollectionSource.ResetCollection(true);
             lv.RefreshDataSource();
             lv.EditView.RefreshDataSource();
             lv.EditView.Refresh();
-            cat = View.CurrentObject as Cat;
+            var os = View.ObjectSpace;
+            cat.Foods = dCat.Foods;
+            os.ReloadObject(cat);
              
-            MessageBox.Show($"Set {dCat.Name} new colour = {dCat.Color}  , old cat ={cat.Color}");
+            //os.CommitChanges();
+            //os.Refresh();
+            //cat.ObjectSpace = os;
+            
+            //cat.ObjectSpace.Refresh();
+            //var os = cat.ObjectSpace;
+            //cat = ObjectSpace.GetObject(cat);
+            //os.Rollback();
+            //var conditionalRefreshController = Frame.GetController<AppearanceController>();
+            //conditionalRefreshController.Refresh();
+            //cat.Foods = dCat.Foods;
+            //cat = View.CurrentObject as Cat;
+
+            // changes = db.ChangeTracker.HasChanges() ? "Changes" : "None";
+            //MessageBox.Show(changes);
+            MessageBox.Show($"Set {dCat.Name} new colour = {dCat.Color}  , old cat ={cat.Color} , Foods {cat.Foods.Count} , DFoods {dCat.Foods.Count}");
 
             
 
@@ -86,21 +108,25 @@ namespace DX22Cats.Module.Controllers
 
         private void View_CurrentObjectChanged(object sender, EventArgs e)
         {
-            //var h = View.CurrentObject as Cat;
-            //if (h == null)
-            //    return;
+            if (GlobalSingleton.Instance.RefreshCats)
+            {
+                GlobalSingleton.Instance.RefreshCats = false;
+                var h = View.CurrentObject as Cat;
+                if (h == null)
+                    return;
 
 
-            //var lv = View as ListView;
-            //var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
-            //if (dv == null)
-            //    return;
+                var lv = View as ListView;
+                var dv = View as DetailView ?? lv?.EditFrame?.View as DetailView;
+                if (dv == null)
+                    return;
 
-            //dv.RefreshDataSource();
-            //dv.Refresh();
-          
-            //var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
-            //viewItem.Refresh();
+                dv.RefreshDataSource();
+                dv.Refresh();
+
+                var viewItem = dv.Items.SingleOrDefault(x => x.Id == "Foods");
+                viewItem.Refresh();
+            }
         }
         protected override void OnActivated()
         {

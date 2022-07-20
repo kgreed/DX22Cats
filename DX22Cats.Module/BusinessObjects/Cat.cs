@@ -56,7 +56,7 @@ namespace DX22Cats.Module.BusinessObjects
                 }
             }
         }
-
+        
         public virtual List<Food> Foods { get; set; }
         private bool _verified;
         [Column("IsVerified")]

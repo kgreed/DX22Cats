@@ -12,6 +12,7 @@ using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Validation;
 using DX22Cats.Module.BusinessObjects;
 using DX22Cats.Module.Functions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,44 +60,103 @@ namespace DX22Cats.Win.Controllers
                 return;
             }
             var db = Helpers.MakeDbContext();
-            var cat = db.Cats.Where(x => x.ID == mFood.Cat.ID).SingleOrDefault();
+
+            var holderDetailView = View.ObjectSpace.Owner as DetailView;
+            int lvCount;
+            Cat selectedCat = null;
+            GridListEditor gridListEditor = null;
+            ListView lv= null;
+            foreach (ListPropertyEditor lpe in holderDetailView.GetItems<ListPropertyEditor>())
+            {
+                lv = lpe.ListView;
+                if (lv == null) lvCount = 0;
+
+                gridListEditor = ((ListView)lv).Editor as DevExpress.ExpressApp.Win.Editors.GridListEditor;
+                lvCount = gridListEditor.GridView.RowCount;
+                var gv = gridListEditor.GridView;
+                var  selectedRows = gridListEditor.GridView.GetSelectedRows();
+                if (selectedRows.Count() == 1)
+                {
+                    var rowId = selectedRows[0];
+                    selectedCat =  gv.GetRow(rowId) as Cat;
+                }
+            }
+
+            if (selectedCat == null)
+            {
+                MessageBox.Show("You need to select a cate");
+            }
+            var cat = db.Cats.Include(x=>x.Foods).Where(x => x.ID == selectedCat.ID).SingleOrDefault();
             var food = new Food
             {
+                CatId = cat.ID,
                 Cat =  cat,
                 Description = mFood.Description
             };
-            db.Foods.Add(food);
-            db.SaveChanges();
+            cat.Foods.Add(food);
             
-            var holderDetailView = View.ObjectSpace.Owner as DetailView;
-            var holder = holderDetailView.CurrentObject as CatFilterHolder;
-           
-            //holder.ObjectSpace.Refresh();
-            holder.Cats.Clear();    
-            holder.ApplyFilter();
-            var firstCatFoods = holder.Cats.FirstOrDefault().Foods.Count;
-           // holderDetailView.ObjectSpace.Refresh();
-            // holder.ObjectSpace.Refresh();
+            db.Entry(cat).State = EntityState.Modified;
+            
+             
+            db.SaveChanges();
 
-             //var win = Application.MainWindow;
-            //win.SetView(holderDetailView);
-            //win.View.RefreshDataSource();
-           // var fr = (NestedFrame)Frame;
+            //var os = selectedCat.ObjectSpace;
+            //selectedCat.Foods = cat.Foods;
+            //os.ReloadObject(selectedCat);
+            //holderDetailView.RefreshDataSource();
+            var dCat = db.Cats.Include(x => x.Foods).Where(x => x.ID == selectedCat.ID).SingleOrDefault();
+            var os = View.ObjectSpace;
+            selectedCat.Foods = dCat.Foods;
+            os.ReloadObject(cat);
 
-            //((ListView)View).ObjectSpace.Refresh();   WORKS IF I DO THIS BUT I lose the conditional appearance
-
-            var refreshController = Frame.GetController<RefreshController>();
-            var refreshAction = refreshController.RefreshAction;
-            Debug.Print(refreshAction.Active.ResultValue.ToString()); // false
-            Debug.Print(refreshAction.Enabled.ResultValue.ToString()); // true
-           // refreshController.RefreshAction.DoExecute();
+            lv.CollectionSource.ResetCollection(true);
+            lv.RefreshDataSource();
+            lv.EditView.RefreshDataSource();
+            lv.EditView.Refresh();
+         
 
 
 
+            //gridListEditor.GridView.RefreshData();
+            //var retreivedCat = db.Cats.Include(x => x.Foods).Where(x => x.ID == selectedCat.ID).SingleOrDefault();
+            MessageBox.Show(dCat.Foods.Count.ToString());
+            //var holderDetailView = View.ObjectSpace.Owner as DetailView;
+            //Debug.Print(holderDetailView.IsRoot.ToString());
+            //var holder = holderDetailView.CurrentObject as CatFilterHolder;
+
+
+            ////holder.ObjectSpace.Refresh();
+            //holder.Cats.Clear();    
+            //holder.ApplyFilter();
+            //var firstCatFoods = holder.Cats.FirstOrDefault().Foods.Count;
+            //GlobalSingleton.Instance.RefreshCatFilterHolder = true;
+            //holderDetailView.CurrentObject = holder;
+            //holderDetailView.RefreshDataSource();
+
+            //var holderController = Application.MainWindow.GetController<CatFilterHolderController>();
+
+            //// holderDetailView.ObjectSpace.Refresh();
+            //// holder.ObjectSpace.Refresh();
+
+            ////var win = Application.MainWindow;
+            ////win.SetView(holderDetailView);
+            ////win.View.RefreshDataSource();
+            //// var fr = (NestedFrame)Frame;
+
+            //////((ListView)View).ObjectSpace.Refresh();   WORKS IF I DO THIS BUT I lose the conditional appearance
+            ////var refreshController = Application.MainWindow.GetController<RefreshController>();  
+            //var refreshController = holderController.Frame.GetController<RefreshController>();
+            //var refreshAction = refreshController.RefreshAction;
+            //Debug.Print(refreshAction.Active.ResultValue.ToString()); // false
+            ////Debug.Print(refreshAction.Enabled.ResultValue.ToString()); // true
+            //// refreshController.RefreshAction.DoExecute();
 
 
 
-             var fr = (NestedFrame)Frame;
+
+
+
+            //var fr = (NestedFrame)Frame;
             //var viewItem = fr.ViewItem;
             //var dv = viewItem.View as DetailView;
 

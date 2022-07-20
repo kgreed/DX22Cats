@@ -10,6 +10,7 @@ namespace DX22Cats.Module.Functions
 
         public static GlobalSingleton Instance => lazy.Value;
 
-
+        public bool RefreshCats { get; set; }
+        public bool RefreshCatFilterHolder { get; set; }
     }
 }

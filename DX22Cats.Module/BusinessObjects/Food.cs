@@ -1,6 +1,7 @@
 ﻿using DevExpress.Persistent.Base;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DX22Cats.Module.BusinessObjects
@@ -14,7 +15,8 @@ namespace DX22Cats.Module.BusinessObjects
         [Key]
         public int Id { get; set; }
         public string Description { get; set; }
-
+        public int CatId { get; set; }
+        [ForeignKey("CatId")]
         public virtual Cat Cat { get; set; }
         public int Key => Id;
         internal void ResetJobRHSResult()
