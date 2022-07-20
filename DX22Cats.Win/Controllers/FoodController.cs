@@ -100,10 +100,7 @@ namespace DX22Cats.Win.Controllers
              
             db.SaveChanges();
 
-            //var os = selectedCat.ObjectSpace;
-            //selectedCat.Foods = cat.Foods;
-            //os.ReloadObject(selectedCat);
-            //holderDetailView.RefreshDataSource();
+             
             var dCat = db.Cats.Include(x => x.Foods).Where(x => x.ID == selectedCat.ID).SingleOrDefault();
             var os = View.ObjectSpace;
             selectedCat.Foods = dCat.Foods;
@@ -113,8 +110,10 @@ namespace DX22Cats.Win.Controllers
             lv.RefreshDataSource();
             lv.EditView.RefreshDataSource();
             lv.EditView.Refresh();
-         
-
+            
+            os.CommitChanges();
+             
+            
 
 
             //gridListEditor.GridView.RefreshData();
